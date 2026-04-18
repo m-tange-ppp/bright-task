@@ -55,9 +55,10 @@ export const useTaskStore = create<TaskStore>((set) => ({
   },
 
   finishTask: async (id) => {
-    await completeTaskUseCase.execute(id);
+    const completed = await completeTaskUseCase.execute(id);
     set((state) => ({
       activeTasks: state.activeTasks.filter((t) => t.id !== id),
+      completedTasks: [completed, ...state.completedTasks],
     }));
   },
 

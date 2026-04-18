@@ -1,6 +1,7 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { TaskDto } from "../../application/task/dto/TaskDto";
 import { useTaskStore } from "../stores/taskStore";
@@ -8,9 +9,11 @@ import { useTaskStore } from "../stores/taskStore";
 export default function HistoryScreen() {
   const { completedTasks, isLoadingCompleted, loadCompletedTasks } = useTaskStore();
 
-  useEffect(() => {
-    loadCompletedTasks();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadCompletedTasks();
+    }, [loadCompletedTasks]),
+  );
 
   const renderTask = ({ item }: { item: TaskDto }) => (
     <View className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 opacity-80">
