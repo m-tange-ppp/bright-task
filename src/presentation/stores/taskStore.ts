@@ -12,7 +12,8 @@ import {
 interface TaskStore {
   activeTasks: TaskDto[];
   completedTasks: TaskDto[];
-  isLoading: boolean;
+  isLoadingActive: boolean;
+  isLoadingCompleted: boolean;
 
   loadActiveTasks: () => Promise<void>;
   loadCompletedTasks: () => Promise<void>;
@@ -24,18 +25,27 @@ interface TaskStore {
 export const useTaskStore = create<TaskStore>((set) => ({
   activeTasks: [],
   completedTasks: [],
-  isLoading: false,
+  isLoadingActive: false,
+  isLoadingCompleted: false,
 
   loadActiveTasks: async () => {
-    set({ isLoading: true });
-    const tasks = await getActiveTasksUseCase.execute();
-    set({ activeTasks: tasks, isLoading: false });
+    set({ isLoadingActive: true });
+    try {
+      const tasks = await getActiveTasksUseCase.execute();
+      set({ activeTasks: tasks });
+    } finally {
+      set({ isLoadingActive: false });
+    }
   },
 
   loadCompletedTasks: async () => {
-    set({ isLoading: true });
-    const tasks = await getCompletedTasksUseCase.execute();
-    set({ completedTasks: tasks, isLoading: false });
+    set({ isLoadingCompleted: true });
+    try {
+      const tasks = await getCompletedTasksUseCase.execute();
+      set({ completedTasks: tasks });
+    } finally {
+      set({ isLoadingCompleted: false });
+    }
   },
 
   addTask: async (dto) => {
