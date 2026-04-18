@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { Text } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
 import { notificationService } from "./src/di";
 import { initSchema } from "./src/infrastructure/db/schema";
@@ -68,6 +69,7 @@ export default function App() {
   }, []);
 
   return (
+    <SafeAreaProvider>
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator
@@ -93,5 +95,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

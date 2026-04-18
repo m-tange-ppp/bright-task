@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { notificationService } from "../../di";
 
 export default function SettingsScreen() {
@@ -23,7 +24,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View className="flex-1 bg-gray-50 px-4 pt-4">
+    <SafeAreaView edges={["top"]} className="flex-1 bg-gray-50 px-4 pt-4">
       <View className="bg-white rounded-2xl p-4 mb-4 border border-gray-100">
         <Text className="text-base font-semibold text-gray-700 mb-2">
           プッシュ通知
@@ -47,6 +48,6 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
