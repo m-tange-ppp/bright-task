@@ -1,7 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TaskDto } from "../../application/task/dto/TaskDto";
@@ -15,6 +15,16 @@ export default function HistoryScreen() {
     useCallback(() => {
       loadCompletedTasks();
     }, []),
+  );
+
+  const totalDislikePoints = useMemo(
+    () => completedTasks.reduce((sum, t) => sum + t.dislikeLevel, 0),
+    [completedTasks],
+  );
+
+  const totalImportancePoints = useMemo(
+    () => completedTasks.reduce((sum, t) => sum + t.importance, 0),
+    [completedTasks],
   );
 
   const renderTask = ({ item }: { item: TaskDto }) => (
@@ -33,11 +43,25 @@ export default function HistoryScreen() {
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-gray-50 px-4 pt-4">
-      <View className="bg-orange-50 rounded-2xl p-4 mb-4 items-center">
-        <Text className="text-3xl font-bold text-orange-500">
-          {completedTasks.length}
-        </Text>
-        <Text className="text-sm text-orange-400 mt-1">完了したタスク 🎉</Text>
+      <View className="flex-row gap-3 mb-4">
+        <View className="flex-1 bg-orange-50 rounded-2xl p-4 items-center">
+          <Text className="text-3xl font-bold text-orange-500">
+            {completedTasks.length}
+          </Text>
+          <Text className="text-xs text-orange-400 mt-1">完了タスク 🎉</Text>
+        </View>
+        <View className="flex-1 bg-red-50 rounded-2xl p-4 items-center">
+          <Text className="text-3xl font-bold text-red-500">
+            {totalDislikePoints}
+          </Text>
+          <Text className="text-xs text-red-400 mt-1">嫌さポイント 🔥</Text>
+        </View>
+        <View className="flex-1 bg-blue-50 rounded-2xl p-4 items-center">
+          <Text className="text-3xl font-bold text-blue-500">
+            {totalImportancePoints}
+          </Text>
+          <Text className="text-xs text-blue-400 mt-1">重要度ポイント ⭐</Text>
+        </View>
       </View>
 
       {isLoadingCompleted ? (
