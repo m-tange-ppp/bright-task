@@ -117,7 +117,7 @@ export default function AddTaskScreen() {
           label="⭐ 重要度（1: 軽め 〜 5: 最重要）"
           value={importance}
           onChange={setImportance}
-          color="blue"
+          color="orange"
         />
 
         <TouchableOpacity

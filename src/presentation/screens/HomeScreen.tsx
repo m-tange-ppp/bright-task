@@ -16,7 +16,7 @@ type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "Main">;
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
-  const { activeTasks, isLoading, loadActiveTasks } = useTaskStore();
+  const { activeTasks, isLoadingActive, loadActiveTasks } = useTaskStore();
 
   useEffect(() => {
     loadActiveTasks();
@@ -42,7 +42,7 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 bg-gray-50 px-4 pt-4">
-      {isLoading ? (
+      {isLoadingActive ? (
         <ActivityIndicator size="large" color="#f97316" className="mt-10" />
       ) : (
         <FlatList

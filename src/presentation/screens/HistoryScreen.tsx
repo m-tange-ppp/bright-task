@@ -6,7 +6,7 @@ import { TaskDto } from "../../application/task/dto/TaskDto";
 import { useTaskStore } from "../stores/taskStore";
 
 export default function HistoryScreen() {
-  const { completedTasks, isLoading, loadCompletedTasks } = useTaskStore();
+  const { completedTasks, isLoadingCompleted, loadCompletedTasks } = useTaskStore();
 
   useEffect(() => {
     loadCompletedTasks();
@@ -35,7 +35,7 @@ export default function HistoryScreen() {
         <Text className="text-sm text-orange-400 mt-1">完了したタスク 🎉</Text>
       </View>
 
-      {isLoading ? (
+      {isLoadingCompleted ? (
         <ActivityIndicator size="large" color="#f97316" className="mt-10" />
       ) : (
         <FlatList
