@@ -8,12 +8,13 @@ import { TaskDto } from "../../application/task/dto/TaskDto";
 import { useTaskStore } from "../stores/taskStore";
 
 export default function HistoryScreen() {
-  const { completedTasks, isLoadingCompleted, loadCompletedTasks } = useTaskStore();
+  const { completedTasks, isLoadingCompleted, loadCompletedTasks } =
+    useTaskStore();
 
   useFocusEffect(
     useCallback(() => {
       loadCompletedTasks();
-    }, [loadCompletedTasks]),
+    }, []),
   );
 
   const renderTask = ({ item }: { item: TaskDto }) => (

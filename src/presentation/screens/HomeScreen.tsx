@@ -1,6 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -19,9 +19,11 @@ export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
   const { activeTasks, isLoadingActive, loadActiveTasks } = useTaskStore();
 
-  useEffect(() => {
-    loadActiveTasks();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadActiveTasks();
+    }, []),
+  );
 
   const renderTask = ({ item }: { item: TaskDto }) => (
     <TouchableOpacity

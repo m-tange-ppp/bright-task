@@ -2,13 +2,14 @@ import * as SQLite from "expo-sqlite";
 
 const DB_NAME = "bright_task.db";
 
-let db: SQLite.SQLiteDatabase | null = null;
+// Promise シングルトン: 並行呼び出しでも openDatabaseAsync は1回だけ実行される
+let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
-  if (!db) {
-    db = await SQLite.openDatabaseAsync(DB_NAME);
+  if (!dbPromise) {
+    dbPromise = SQLite.openDatabaseAsync(DB_NAME);
   }
-  return db;
+  return dbPromise;
 }
 
 export async function initSchema(): Promise<void> {

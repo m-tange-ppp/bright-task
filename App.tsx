@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import { Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./global.css";
 import { notificationService } from "./src/di";
@@ -63,38 +63,55 @@ function MainTabs() {
 }
 
 export default function App() {
+  const [isReady, setIsReady] = React.useState(false);
+
   useEffect(() => {
-    initSchema();
-    notificationService.requestPermission();
+    (async () => {
+      await initSchema();
+      notificationService.requestPermission();
+      setIsReady(true);
+    })();
   }, []);
+
+  if (!isReady) {
+    return (
+      <SafeAreaProvider>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#f97316" />
+        </View>
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <Stack.Navigator
-        screenOptions={{
-          headerTintColor: "#f97316",
-          headerTitleStyle: { fontWeight: "bold" },
-        }}
-      >
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AddTask"
-          component={AddTaskScreen}
-          options={{ title: "タスクを追加" }}
-        />
-        <Stack.Screen
-          name="TaskDetail"
-          component={TaskDetailScreen}
-          options={{ title: "タスク詳細" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <Stack.Navigator
+          screenOptions={{
+            headerTintColor: "#f97316",
+            headerTitleStyle: { fontWeight: "bold" },
+          }}
+        >
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="AddTask"
+            component={AddTaskScreen}
+            options={{ title: "タスクを追加" }}
+          />
+          <Stack.Screen
+            name="TaskDetail"
+            component={TaskDetailScreen}
+            options={{ title: "タスク詳細" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
