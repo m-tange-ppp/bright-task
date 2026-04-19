@@ -27,19 +27,33 @@ export default function HistoryScreen() {
     [completedTasks],
   );
 
-  const renderTask = ({ item }: { item: TaskDto }) => (
-    <View className="bg-white rounded-2xl p-4 mb-3 border border-gray-100 opacity-80">
-      <Text className="text-base font-semibold text-gray-700">
-        {item.title}
-      </Text>
-      {item.completedAt && (
-        <Text className="text-xs text-gray-400 mt-1">
-          完了:{" "}
-          {format(new Date(item.completedAt), "M月d日 HH:mm", { locale: ja })}
+  const getScoreBg = (score: number): string => {
+    if (score >= 20) return "bg-orange-300";
+    if (score >= 12) return "bg-orange-200";
+    if (score >= 8) return "bg-orange-100";
+    if (score >= 5) return "bg-orange-50";
+    return "bg-white";
+  };
+
+  const renderTask = ({ item }: { item: TaskDto }) => {
+    const score = item.dislikeLevel * item.importance;
+    const bg = getScoreBg(score);
+    return (
+      <View
+        className={`${bg} rounded-2xl p-4 mb-3 border border-gray-100 opacity-80`}
+      >
+        <Text className="text-base font-semibold text-gray-700">
+          {item.title}
         </Text>
-      )}
-    </View>
-  );
+        {item.completedAt && (
+          <Text className="text-xs text-gray-400 mt-1">
+            完了:{" "}
+            {format(new Date(item.completedAt), "M月d日 HH:mm", { locale: ja })}
+          </Text>
+        )}
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView edges={["top"]} className="flex-1 bg-gray-50 px-4 pt-4">
