@@ -97,4 +97,22 @@ export class Task {
     // 嫌さ × 重要度 で優先スコアを算出（ドメインルール）
     return this._props.dislikeLevel.value * this._props.importance.value;
   }
+
+  update(fields: {
+    title: string;
+    description: string | null;
+    dislikeLevel: DislikeLevel;
+    importance: Importance;
+    dueDate: string | null;
+    reminderAt: string | null;
+  }): Task {
+    if (!fields.title || fields.title.trim().length === 0) {
+      throw new Error("Task title cannot be empty");
+    }
+    return new Task({
+      ...this._props,
+      ...fields,
+      updatedAt: new Date().toISOString(),
+    });
+  }
 }

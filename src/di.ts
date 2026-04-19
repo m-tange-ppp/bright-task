@@ -4,6 +4,7 @@ import { CreateTaskUseCase } from "./application/task/useCases/CreateTaskUseCase
 import { DeleteTaskUseCase } from "./application/task/useCases/DeleteTaskUseCase";
 import { GetActiveTasksUseCase } from "./application/task/useCases/GetActiveTasksUseCase";
 import { GetCompletedTasksUseCase } from "./application/task/useCases/GetCompletedTasksUseCase";
+import { UpdateTaskUseCase } from "./application/task/useCases/UpdateTaskUseCase";
 import { SQLiteTaskRepository } from "./infrastructure/db/SQLiteTaskRepository";
 import { ExpoNotificationService } from "./infrastructure/notifications/ExpoNotificationService";
 
@@ -19,6 +20,7 @@ export const getCompletedTasksUseCase = new GetCompletedTasksUseCase(
   taskRepository,
 );
 export const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
+export const updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
 export const bulkDeleteTasksUseCase = new BulkDeleteTasksUseCase(
   taskRepository,
 );

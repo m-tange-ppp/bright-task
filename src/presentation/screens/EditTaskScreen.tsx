@@ -1,9 +1,11 @@
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   ScrollView,
   Text,
@@ -11,19 +13,54 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { CreateTaskDto } from "../../application/task/dto/CreateTaskDto";
+import { TaskDto } from "../../application/task/dto/TaskDto";
+import { UpdateTaskDto } from "../../application/task/dto/UpdateTaskDto";
+import { getActiveTasksUseCase, getCompletedTasksUseCase } from "../../di";
+import { RootStackParamList } from "../../types/navigation";
 import { useTaskStore } from "../stores/taskStore";
 
-export default function AddTaskScreen() {
-  const navigation = useNavigation();
-  const { addTask } = useTaskStore();
+type EditTaskRouteProp = RouteProp<RootStackParamList, "EditTask">;
+type EditTaskNavProp = NativeStackNavigationProp<RootStackParamList>;
 
+export default function EditTaskScreen() {
+  const navigation = useNavigation<EditTaskNavProp>();
+  const route = useRoute<EditTaskRouteProp>();
+  const { taskId } = route.params;
+  const { updateTask } = useTaskStore();
+
+  const [task, setTask] = useState<TaskDto | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dislikeLevel, setDislikeLevel] = useState(3);
   const [importance, setImportance] = useState(3);
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [hasTime, setHasTime] = useState(false);
+
+  useEffect(() => {
+    const fetchTask = async () => {
+      const active = await getActiveTasksUseCase.execute();
+      const found = active.find((t: TaskDto) => t.id === taskId);
+      const t =
+        found ??
+        (await getCompletedTasksUseCase.execute()).find(
+          (t) => t.id === taskId,
+        ) ??
+        null;
+      if (t) {
+        setTask(t);
+        setTitle(t.title);
+        setDescription(t.description ?? "");
+        setDislikeLevel(t.dislikeLevel);
+        setImportance(t.importance);
+        if (t.dueDate) {
+          const d = new Date(t.dueDate);
+          setDueDate(d);
+          setHasTime(d.getHours() !== 0);
+        }
+      }
+    };
+    fetchTask();
+  }, [taskId]);
 
   const openDatePicker = () => {
     DateTimePickerAndroid.open({
@@ -33,7 +70,6 @@ export default function AddTaskScreen() {
       onChange: (_, date) => {
         if (date) {
           const next = new Date(date);
-          // 既に時間が設定済みなら時間を引き継ぐ
           if (hasTime && dueDate) {
             next.setHours(dueDate.getHours(), 0, 0, 0);
           } else {
@@ -50,7 +86,7 @@ export default function AddTaskScreen() {
       value: dueDate ?? new Date(),
       mode: "time",
       is24Hour: true,
-      minuteInterval: 30, // 30分単位（最大粒度）
+      minuteInterval: 30,
       onChange: (_, date) => {
         if (date && dueDate) {
           const next = new Date(dueDate);
@@ -82,17 +118,18 @@ export default function AddTaskScreen() {
       return;
     }
 
-    const dto: CreateTaskDto = {
+    const dto: UpdateTaskDto = {
+      id: taskId,
       title: title.trim(),
       description: description.trim() || null,
       dislikeLevel,
       importance,
       dueDate: dueDate ? dueDate.toISOString() : null,
-      reminderAt: null,
+      reminderAt: task?.reminderAt ?? null,
     };
 
-    await addTask(dto);
-    navigation.goBack();
+    await updateTask(dto);
+    navigation.navigate("Main");
   };
 
   const LevelSelector = ({
@@ -133,6 +170,14 @@ export default function AddTaskScreen() {
       </View>
     </View>
   );
+
+  if (!task) {
+    return (
+      <View className="flex-1 items-center justify-center bg-gray-50">
+        <ActivityIndicator size="large" color="#f97316" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -240,9 +285,7 @@ export default function AddTaskScreen() {
           className="bg-orange-500 rounded-2xl py-4 items-center mt-2"
           onPress={handleSave}
         >
-          <Text className="text-white font-bold text-base">
-            タスクを追加する
-          </Text>
+          <Text className="text-white font-bold text-base">変更を保存する</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

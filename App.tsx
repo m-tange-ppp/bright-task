@@ -9,6 +9,7 @@ import "./global.css";
 import { notificationService } from "./src/di";
 import { initSchema } from "./src/infrastructure/db/schema";
 import AddTaskScreen from "./src/presentation/screens/AddTaskScreen";
+import EditTaskScreen from "./src/presentation/screens/EditTaskScreen";
 import HistoryScreen from "./src/presentation/screens/HistoryScreen";
 import HomeScreen from "./src/presentation/screens/HomeScreen";
 import SettingsScreen from "./src/presentation/screens/SettingsScreen";
@@ -104,6 +105,11 @@ export default function App() {
             name="AddTask"
             component={AddTaskScreen}
             options={{ title: "タスクを追加" }}
+          />
+          <Stack.Screen
+            name="EditTask"
+            component={EditTaskScreen}
+            options={{ title: "タスクを編集" }}
           />
           <Stack.Screen
             name="TaskDetail"

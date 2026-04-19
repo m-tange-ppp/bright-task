@@ -1,4 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { format } from "date-fns";
+import { ja } from "date-fns/locale";
 import * as Haptics from "expo-haptics";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,10 +18,11 @@ import { RootStackParamList } from "../../types/navigation";
 import { useTaskStore } from "../stores/taskStore";
 
 type TaskDetailRouteProp = RouteProp<RootStackParamList, "TaskDetail">;
+type TaskDetailNavProp = NativeStackNavigationProp<RootStackParamList>;
 
 export default function TaskDetailScreen() {
   const route = useRoute<TaskDetailRouteProp>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<TaskDetailNavProp>();
   const { taskId } = route.params;
   const { finishTask, removeTask } = useTaskStore();
 
@@ -77,18 +81,31 @@ export default function TaskDetailScreen() {
           <Text className="text-sm text-gray-500 mb-4">{task.description}</Text>
         )}
 
-        <View className="flex-row gap-3">
-          <View className="flex-1 bg-orange-50 rounded-xl p-3 items-center">
-            <Text className="text-xs text-orange-500 font-semibold">
-              だるさ
+        {task.dueDate && (
+          <View className="flex-row items-center mb-4 gap-1">
+            <Text className="text-xs text-gray-400">📅 期限：</Text>
+            <Text className="text-xs text-gray-600 font-semibold">
+              {format(
+                new Date(task.dueDate),
+                new Date(task.dueDate).getHours() !== 0
+                  ? "yyyy年M月d日（E） H時"
+                  : "yyyy年M月d日（E）",
+                { locale: ja },
+              )}
             </Text>
-            <Text className="text-2xl font-bold text-orange-500">
+          </View>
+        )}
+
+        <View className="flex-row gap-3">
+          <View className="flex-1 bg-blue-50 rounded-xl p-3 items-center">
+            <Text className="text-xs text-blue-500 font-semibold">だるさ</Text>
+            <Text className="text-2xl font-bold text-blue-500">
               {task.dislikeLevel}
             </Text>
           </View>
-          <View className="flex-1 bg-blue-50 rounded-xl p-3 items-center">
-            <Text className="text-xs text-blue-500 font-semibold">重要度</Text>
-            <Text className="text-2xl font-bold text-blue-500">
+          <View className="flex-1 bg-red-50 rounded-xl p-3 items-center">
+            <Text className="text-xs text-red-500 font-semibold">重要度</Text>
+            <Text className="text-2xl font-bold text-red-500">
               {task.importance}
             </Text>
           </View>
@@ -97,7 +114,16 @@ export default function TaskDetailScreen() {
 
       {task.status !== "completed" && (
         <TouchableOpacity
-          className="bg-green-500 rounded-2xl py-4 items-center mb-3"
+          className="bg-orange-400 rounded-2xl py-4 items-center mb-3"
+          onPress={() => navigation.navigate("EditTask", { taskId: task.id })}
+        >
+          <Text className="text-white font-bold text-base">✏️ 編集する</Text>
+        </TouchableOpacity>
+      )}
+
+      {task.status !== "completed" && (
+        <TouchableOpacity
+          className="bg-green-400 rounded-2xl py-4 items-center mb-3"
           onPress={handleComplete}
         >
           <Text className="text-white font-bold text-base">✅ 完了！</Text>
@@ -105,10 +131,10 @@ export default function TaskDetailScreen() {
       )}
 
       <TouchableOpacity
-        className="bg-red-50 rounded-2xl py-4 items-center border border-red-100"
+        className="bg-red-400 rounded-2xl py-4 items-center"
         onPress={handleDelete}
       >
-        <Text className="text-red-500 font-bold text-base">削除する</Text>
+        <Text className="text-white font-bold text-base">🗑️ 削除する</Text>
       </TouchableOpacity>
     </ScrollView>
   );

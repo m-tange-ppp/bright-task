@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { CreateTaskDto } from "../../application/task/dto/CreateTaskDto";
 import { TaskDto } from "../../application/task/dto/TaskDto";
+import { UpdateTaskDto } from "../../application/task/dto/UpdateTaskDto";
 import { BulkDeleteScope } from "../../application/task/useCases/BulkDeleteTasksUseCase";
 import {
   bulkDeleteTasksUseCase,
@@ -9,6 +10,7 @@ import {
   deleteTaskUseCase,
   getActiveTasksUseCase,
   getCompletedTasksUseCase,
+  updateTaskUseCase,
 } from "../../di";
 
 interface TaskStore {
@@ -22,6 +24,7 @@ interface TaskStore {
   addTask: (dto: CreateTaskDto) => Promise<TaskDto>;
   finishTask: (id: string) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
+  updateTask: (dto: UpdateTaskDto) => Promise<void>;
   bulkRemoveTasks: (scope: BulkDeleteScope) => Promise<void>;
 }
 
@@ -70,6 +73,15 @@ export const useTaskStore = create<TaskStore>((set) => ({
     set((state) => ({
       activeTasks: state.activeTasks.filter((t) => t.id !== id),
       completedTasks: state.completedTasks.filter((t) => t.id !== id),
+    }));
+  },
+
+  updateTask: async (dto) => {
+    const updated = await updateTaskUseCase.execute(dto);
+    set((state) => ({
+      activeTasks: state.activeTasks.map((t) =>
+        t.id === dto.id ? updated : t,
+      ),
     }));
   },
 
