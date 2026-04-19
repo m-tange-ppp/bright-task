@@ -6,4 +6,7 @@ export interface ITaskRepository {
   findAllCompleted(): Promise<Task[]>;
   save(task: Task): Promise<void>;
   delete(id: string): Promise<void>;
+  deleteAllActive(): Promise<void>;
+  deleteAllCompleted(): Promise<void>;
+  deleteAll(): Promise<void>;
 }

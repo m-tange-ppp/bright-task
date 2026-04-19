@@ -36,7 +36,7 @@ export default function HomeScreen() {
         </Text>
         <View className="bg-orange-100 rounded-full px-2 py-1">
           <Text className="text-xs text-orange-600 font-bold">
-            嫌さ {item.dislikeLevel}
+            だるさ {item.dislikeLevel}
           </Text>
         </View>
       </View>

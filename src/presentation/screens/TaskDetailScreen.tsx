@@ -80,7 +80,7 @@ export default function TaskDetailScreen() {
         <View className="flex-row gap-3">
           <View className="flex-1 bg-orange-50 rounded-xl p-3 items-center">
             <Text className="text-xs text-orange-500 font-semibold">
-              嫌さレベル
+              だるさ
             </Text>
             <Text className="text-2xl font-bold text-orange-500">
               {task.dislikeLevel}

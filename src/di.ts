@@ -1,3 +1,4 @@
+import { BulkDeleteTasksUseCase } from "./application/task/useCases/BulkDeleteTasksUseCase";
 import { CompleteTaskUseCase } from "./application/task/useCases/CompleteTaskUseCase";
 import { CreateTaskUseCase } from "./application/task/useCases/CreateTaskUseCase";
 import { DeleteTaskUseCase } from "./application/task/useCases/DeleteTaskUseCase";
@@ -18,3 +19,6 @@ export const getCompletedTasksUseCase = new GetCompletedTasksUseCase(
   taskRepository,
 );
 export const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
+export const bulkDeleteTasksUseCase = new BulkDeleteTasksUseCase(
+  taskRepository,
+);

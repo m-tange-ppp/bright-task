@@ -97,4 +97,21 @@ export class SQLiteTaskRepository implements ITaskRepository {
     const db = await getDatabase();
     await db.runAsync("DELETE FROM tasks WHERE id = ?", [id]);
   }
+
+  async deleteAllActive(): Promise<void> {
+    const db = await getDatabase();
+    await db.runAsync(
+      "DELETE FROM tasks WHERE status IN ('pending', 'in_progress', 'snoozed')",
+    );
+  }
+
+  async deleteAllCompleted(): Promise<void> {
+    const db = await getDatabase();
+    await db.runAsync("DELETE FROM tasks WHERE status = 'completed'");
+  }
+
+  async deleteAll(): Promise<void> {
+    const db = await getDatabase();
+    await db.runAsync("DELETE FROM tasks");
+  }
 }

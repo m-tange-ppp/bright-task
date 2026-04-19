@@ -54,13 +54,13 @@ export default function HistoryScreen() {
           <Text className="text-3xl font-bold text-red-500">
             {totalDislikePoints}
           </Text>
-          <Text className="text-xs text-red-400 mt-1">嫌さポイント 🔥</Text>
+          <Text className="text-xs text-red-400 mt-1">だるさ合計 🔥</Text>
         </View>
         <View className="flex-1 bg-blue-50 rounded-2xl p-4 items-center">
           <Text className="text-3xl font-bold text-blue-500">
             {totalImportancePoints}
           </Text>
-          <Text className="text-xs text-blue-400 mt-1">重要度ポイント ⭐</Text>
+          <Text className="text-xs text-blue-400 mt-1">重要度合計 ⭐</Text>
         </View>
       </View>
 

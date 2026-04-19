@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import { CreateTaskDto } from "../../application/task/dto/CreateTaskDto";
 import { TaskDto } from "../../application/task/dto/TaskDto";
+import { BulkDeleteScope } from "../../application/task/useCases/BulkDeleteTasksUseCase";
 import {
+  bulkDeleteTasksUseCase,
   completeTaskUseCase,
   createTaskUseCase,
   deleteTaskUseCase,
@@ -20,6 +22,7 @@ interface TaskStore {
   addTask: (dto: CreateTaskDto) => Promise<TaskDto>;
   finishTask: (id: string) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
+  bulkRemoveTasks: (scope: BulkDeleteScope) => Promise<void>;
 }
 
 export const useTaskStore = create<TaskStore>((set) => ({
@@ -67,6 +70,14 @@ export const useTaskStore = create<TaskStore>((set) => ({
     set((state) => ({
       activeTasks: state.activeTasks.filter((t) => t.id !== id),
       completedTasks: state.completedTasks.filter((t) => t.id !== id),
+    }));
+  },
+
+  bulkRemoveTasks: async (scope) => {
+    await bulkDeleteTasksUseCase.execute(scope);
+    set((state) => ({
+      activeTasks: scope === "completed" ? state.activeTasks : [],
+      completedTasks: scope === "active" ? state.completedTasks : [],
     }));
   },
 }));
