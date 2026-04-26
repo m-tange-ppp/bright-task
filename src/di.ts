@@ -13,14 +13,27 @@ const taskRepository = new SQLiteTaskRepository();
 export const notificationService = new ExpoNotificationService();
 
 // Application UseCases
-export const createTaskUseCase = new CreateTaskUseCase(taskRepository);
-export const completeTaskUseCase = new CompleteTaskUseCase(taskRepository);
+export const createTaskUseCase = new CreateTaskUseCase(
+  taskRepository,
+  notificationService,
+);
+export const completeTaskUseCase = new CompleteTaskUseCase(
+  taskRepository,
+  notificationService,
+);
 export const getActiveTasksUseCase = new GetActiveTasksUseCase(taskRepository);
 export const getCompletedTasksUseCase = new GetCompletedTasksUseCase(
   taskRepository,
 );
-export const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
-export const updateTaskUseCase = new UpdateTaskUseCase(taskRepository);
+export const deleteTaskUseCase = new DeleteTaskUseCase(
+  taskRepository,
+  notificationService,
+);
+export const updateTaskUseCase = new UpdateTaskUseCase(
+  taskRepository,
+  notificationService,
+);
 export const bulkDeleteTasksUseCase = new BulkDeleteTasksUseCase(
   taskRepository,
+  notificationService,
 );

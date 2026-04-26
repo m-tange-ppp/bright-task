@@ -85,13 +85,14 @@ export default function TaskDetailScreen() {
           <View className="flex-row items-center mb-4 gap-1">
             <Text className="text-xs text-gray-400">📅 期限：</Text>
             <Text className="text-xs text-gray-600 font-semibold">
-              {format(
-                new Date(task.dueDate),
-                new Date(task.dueDate).getHours() !== 0
-                  ? "yyyy年M月d日（E） H時"
-                  : "yyyy年M月d日（E）",
-                { locale: ja },
-              )}
+              {(() => {
+                const d = new Date(task.dueDate!);
+                return format(
+                  d,
+                  task.hasTime ? "M月d日(EEE) HH:mm" : "M月d日(EEE)",
+                  { locale: ja },
+                );
+              })()}
             </Text>
           </View>
         )}

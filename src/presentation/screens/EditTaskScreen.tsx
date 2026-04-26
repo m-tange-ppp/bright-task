@@ -35,6 +35,21 @@ export default function EditTaskScreen() {
   const [importance, setImportance] = useState(3);
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [hasTime, setHasTime] = useState(false);
+  const [preReminderOffsets, setPreReminderOffsets] = useState<number[]>([]);
+
+  const REMINDER_PRESETS: { label: string; minutes: number }[] = [
+    { label: "1時間前", minutes: 60 },
+    { label: "半日前", minutes: 720 },
+    { label: "1日前", minutes: 1440 },
+  ];
+
+  const toggleReminderOffset = (minutes: number) => {
+    setPreReminderOffsets((prev) =>
+      prev.includes(minutes)
+        ? prev.filter((m) => m !== minutes)
+        : [...prev, minutes],
+    );
+  };
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -55,8 +70,9 @@ export default function EditTaskScreen() {
         if (t.dueDate) {
           const d = new Date(t.dueDate);
           setDueDate(d);
-          setHasTime(d.getHours() !== 0);
+          setHasTime(t.hasTime);
         }
+        setPreReminderOffsets(t.preReminderOffsets ?? []);
       }
     };
     fetchTask();
@@ -71,7 +87,7 @@ export default function EditTaskScreen() {
         if (date) {
           const next = new Date(date);
           if (hasTime && dueDate) {
-            next.setHours(dueDate.getHours(), 0, 0, 0);
+            next.setHours(dueDate.getHours(), dueDate.getMinutes(), 0, 0);
           } else {
             next.setHours(0, 0, 0, 0);
           }
@@ -82,15 +98,20 @@ export default function EditTaskScreen() {
   };
 
   const openTimePicker = () => {
+    const base = dueDate ? new Date(dueDate) : new Date();
+    if (!hasTime) {
+      const now = new Date();
+      base.setHours(now.getHours(), now.getMinutes(), 0, 0);
+    }
     DateTimePickerAndroid.open({
-      value: dueDate ?? new Date(),
+      value: base,
       mode: "time",
       is24Hour: true,
-      minuteInterval: 30,
+      minuteInterval: 5,
       onChange: (_, date) => {
         if (date && dueDate) {
           const next = new Date(dueDate);
-          next.setHours(date.getHours(), 0, 0, 0);
+          next.setHours(date.getHours(), date.getMinutes(), 0, 0);
           setDueDate(next);
           setHasTime(true);
         }
@@ -101,15 +122,7 @@ export default function EditTaskScreen() {
   const clearDueDate = () => {
     setDueDate(null);
     setHasTime(false);
-  };
-
-  const clearTime = () => {
-    if (dueDate) {
-      const next = new Date(dueDate);
-      next.setHours(0, 0, 0, 0);
-      setDueDate(next);
-    }
-    setHasTime(false);
+    setPreReminderOffsets([]);
   };
 
   const handleSave = async () => {
@@ -125,7 +138,9 @@ export default function EditTaskScreen() {
       dislikeLevel,
       importance,
       dueDate: dueDate ? dueDate.toISOString() : null,
+      hasTime,
       reminderAt: task?.reminderAt ?? null,
+      preReminderOffsets,
     };
 
     await updateTask(dto);
@@ -258,16 +273,8 @@ export default function EditTaskScreen() {
                       : "text-gray-400 text-sm"
                   }
                 >
-                  {hasTime ? format(dueDate, "H時") : "時間"}
+                  {hasTime ? format(dueDate, "HH:mm") : "時間"}
                 </Text>
-              </TouchableOpacity>
-            )}
-            {dueDate && hasTime && (
-              <TouchableOpacity
-                onPress={clearTime}
-                className="bg-gray-100 rounded-xl px-2 py-3"
-              >
-                <Text className="text-gray-400 text-xs">時間クリア</Text>
               </TouchableOpacity>
             )}
             {dueDate && (
@@ -280,6 +287,41 @@ export default function EditTaskScreen() {
             )}
           </View>
         </View>
+
+        {dueDate && (
+          <View className="mb-5">
+            <Text className="text-sm font-semibold text-gray-600 mb-2">
+              🔔 リマインダー（任意）
+            </Text>
+            <Text className="text-xs text-gray-400 mb-3">
+              期限の通知は自動で届きます。事前通知を追加できます。
+            </Text>
+            <View className="flex-row gap-2">
+              {REMINDER_PRESETS.map(({ label, minutes }) => {
+                const selected = preReminderOffsets.includes(minutes);
+                return (
+                  <TouchableOpacity
+                    key={minutes}
+                    onPress={() => toggleReminderOffset(minutes)}
+                    className={`flex-1 py-2 rounded-xl items-center border ${
+                      selected
+                        ? "bg-orange-500 border-orange-500"
+                        : "bg-white border-gray-200"
+                    }`}
+                  >
+                    <Text
+                      className={`text-sm font-semibold ${
+                        selected ? "text-white" : "text-gray-500"
+                      }`}
+                    >
+                      {label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        )}
 
         <TouchableOpacity
           className="bg-orange-500 rounded-2xl py-4 items-center mt-2"

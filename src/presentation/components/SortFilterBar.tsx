@@ -63,7 +63,7 @@ export function SortFilterBar({
     filter.importanceMax !== 5;
 
   return (
-    <View>
+    <View className="mb-4">
       {/* フィルターパネル */}
       {filterOpen && (
         <View className="bg-white p-3 border-x border-t border-gray-200 gap-3">

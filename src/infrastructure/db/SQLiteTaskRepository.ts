@@ -15,6 +15,9 @@ interface TaskRow {
   status: string;
   due_date: string | null;
   reminder_at: string | null;
+  has_time: number;
+  pre_reminder_offsets: string;
+  notification_ids: string;
   completed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -30,6 +33,9 @@ function rowToTask(row: TaskRow): Task {
     status: TaskStatus.from(row.status),
     dueDate: row.due_date,
     reminderAt: row.reminder_at,
+    hasTime: row.has_time === 1,
+    preReminderOffsets: JSON.parse(row.pre_reminder_offsets ?? "[]"),
+    notificationIds: JSON.parse(row.notification_ids ?? "[]"),
     completedAt: row.completed_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -65,8 +71,8 @@ export class SQLiteTaskRepository implements ITaskRepository {
   async save(task: Task): Promise<void> {
     const db = await getDatabase();
     await db.runAsync(
-      `INSERT INTO tasks (id, title, description, dislike_level, importance, status, due_date, reminder_at, completed_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `INSERT INTO tasks (id, title, description, dislike_level, importance, status, due_date, reminder_at, has_time, pre_reminder_offsets, notification_ids, completed_at, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          title = excluded.title,
          description = excluded.description,
@@ -75,6 +81,9 @@ export class SQLiteTaskRepository implements ITaskRepository {
          status = excluded.status,
          due_date = excluded.due_date,
          reminder_at = excluded.reminder_at,
+         has_time = excluded.has_time,
+         pre_reminder_offsets = excluded.pre_reminder_offsets,
+         notification_ids = excluded.notification_ids,
          completed_at = excluded.completed_at,
          updated_at = excluded.updated_at`,
       [
@@ -86,6 +95,9 @@ export class SQLiteTaskRepository implements ITaskRepository {
         task.status.value,
         task.dueDate,
         task.reminderAt,
+        task.hasTime ? 1 : 0,
+        JSON.stringify(task.preReminderOffsets),
+        JSON.stringify(task.notificationIds),
         task.completedAt,
         task.createdAt,
         task.updatedAt,

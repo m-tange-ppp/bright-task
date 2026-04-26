@@ -13,6 +13,9 @@ export interface TaskProps {
   status: TaskStatus;
   dueDate: string | null;
   reminderAt: string | null;
+  hasTime: boolean;
+  preReminderOffsets: number[];
+  notificationIds: string[];
   completedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -55,6 +58,15 @@ export class Task {
   }
   get reminderAt(): string | null {
     return this._props.reminderAt;
+  }
+  get hasTime(): boolean {
+    return this._props.hasTime;
+  }
+  get preReminderOffsets(): number[] {
+    return this._props.preReminderOffsets;
+  }
+  get notificationIds(): string[] {
+    return this._props.notificationIds;
   }
   get completedAt(): string | null {
     return this._props.completedAt;
@@ -105,6 +117,8 @@ export class Task {
     importance: Importance;
     dueDate: string | null;
     reminderAt: string | null;
+    hasTime: boolean;
+    preReminderOffsets: number[];
   }): Task {
     if (!fields.title || fields.title.trim().length === 0) {
       throw new Error("Task title cannot be empty");
@@ -112,7 +126,15 @@ export class Task {
     return new Task({
       ...this._props,
       ...fields,
+      notificationIds: [],
       updatedAt: new Date().toISOString(),
+    });
+  }
+
+  withNotificationIds(ids: string[]): Task {
+    return new Task({
+      ...this._props,
+      notificationIds: ids,
     });
   }
 }
