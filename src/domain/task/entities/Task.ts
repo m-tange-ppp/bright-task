@@ -92,6 +92,8 @@ export class Task {
     const event = new TaskCompletedEvent(
       this._props.id.value,
       this._props.title,
+      this._props.dislikeLevel.value,
+      this._props.importance.value,
     );
     return { task: updated, event };
   }

@@ -16,6 +16,23 @@ export async function initSchema(): Promise<void> {
   const database = await getDatabase();
   await database.execAsync(`
     PRAGMA journal_mode = WAL;
+    CREATE TABLE IF NOT EXISTS treats (
+      id          TEXT PRIMARY KEY NOT NULL,
+      title       TEXT NOT NULL,
+      description TEXT,
+      cost_points INTEGER NOT NULL DEFAULT 1,
+      created_at  TEXT NOT NULL,
+      updated_at  TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS point_history (
+      id            TEXT PRIMARY KEY NOT NULL,
+      task_id       TEXT,
+      treat_id      TEXT,
+      type          TEXT NOT NULL,
+      change_points INTEGER NOT NULL,
+      reason        TEXT NOT NULL,
+      created_at    TEXT NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS tasks (
       id TEXT PRIMARY KEY NOT NULL,
       title TEXT NOT NULL,
