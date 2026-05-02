@@ -1,9 +1,9 @@
 import {
   PointHistory,
   PointHistoryType,
-} from "../../domain/reward/entities/PointHistory";
-import { IPointHistoryRepository } from "../../domain/reward/repositories/IPointHistoryRepository";
-import { PointHistoryId } from "../../domain/reward/valueObjects/PointHistoryId";
+} from "../../domain/treat/entities/PointHistory";
+import { IPointHistoryRepository } from "../../domain/treat/repositories/IPointHistoryRepository";
+import { PointHistoryId } from "../../domain/treat/valueObjects/PointHistoryId";
 import { getDatabase } from "./schema";
 
 interface PointHistoryRow {

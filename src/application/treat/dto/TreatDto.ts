@@ -3,6 +3,8 @@ export interface TreatDto {
   title: string;
   description: string | null;
   costPoints: number;
+  /** ごほうびを交換した累計回数 */
+  consumptionCount: number;
   createdAt: string;
   updatedAt: string;
 }

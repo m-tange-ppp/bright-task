@@ -3,7 +3,7 @@ import { PointHistory } from "../entities/PointHistory";
 export class PointBalanceService {
   /**
    * ポイント残高を返す（+と-の合計）
-   * ご褒美消費の残高チェック・表示に使用する
+   * ごほうび消費の残高チェック・表示に使用する
    */
   computeBalance(histories: PointHistory[]): number {
     return histories.reduce((sum, h) => sum + h.changePoints, 0);

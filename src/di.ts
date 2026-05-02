@@ -1,10 +1,3 @@
-import { OnTaskCompletedRecordPoints } from "./application/reward/eventHandlers/OnTaskCompletedRecordPoints";
-import { ConsumeTreatUseCase } from "./application/reward/useCases/ConsumeTreatUseCase";
-import { CreateTreatUseCase } from "./application/reward/useCases/CreateTreatUseCase";
-import { DeleteTreatUseCase } from "./application/reward/useCases/DeleteTreatUseCase";
-import { GetPointBalanceUseCase } from "./application/reward/useCases/GetPointBalanceUseCase";
-import { GetTreatsUseCase } from "./application/reward/useCases/GetTreatsUseCase";
-import { UpdateTreatUseCase } from "./application/reward/useCases/UpdateTreatUseCase";
 import { BulkDeleteTasksUseCase } from "./application/task/useCases/BulkDeleteTasksUseCase";
 import { CompleteTaskUseCase } from "./application/task/useCases/CompleteTaskUseCase";
 import { CreateTaskUseCase } from "./application/task/useCases/CreateTaskUseCase";
@@ -12,9 +5,16 @@ import { DeleteTaskUseCase } from "./application/task/useCases/DeleteTaskUseCase
 import { GetActiveTasksUseCase } from "./application/task/useCases/GetActiveTasksUseCase";
 import { GetCompletedTasksUseCase } from "./application/task/useCases/GetCompletedTasksUseCase";
 import { UpdateTaskUseCase } from "./application/task/useCases/UpdateTaskUseCase";
-import { PointBalanceService } from "./domain/reward/services/PointBalanceService";
+import { OnTaskCompletedRecordPoints } from "./application/treat/eventHandlers/OnTaskCompletedRecordPoints";
+import { ConsumeTreatUseCase } from "./application/treat/useCases/ConsumeTreatUseCase";
+import { CreateTreatUseCase } from "./application/treat/useCases/CreateTreatUseCase";
+import { DeleteTreatUseCase } from "./application/treat/useCases/DeleteTreatUseCase";
+import { GetPointBalanceUseCase } from "./application/treat/useCases/GetPointBalanceUseCase";
+import { GetTreatsUseCase } from "./application/treat/useCases/GetTreatsUseCase";
+import { UpdateTreatUseCase } from "./application/treat/useCases/UpdateTreatUseCase";
 import { domainEventBus } from "./domain/shared/DomainEventBus";
 import { TaskCompletedEvent } from "./domain/task/events/TaskCompletedEvent";
+import { PointBalanceService } from "./domain/treat/services/PointBalanceService";
 import { SQLitePointHistoryRepository } from "./infrastructure/db/SQLitePointHistoryRepository";
 import { SQLiteTaskRepository } from "./infrastructure/db/SQLiteTaskRepository";
 import { SQLiteTreatRepository } from "./infrastructure/db/SQLiteTreatRepository";
@@ -55,14 +55,17 @@ export const bulkDeleteTasksUseCase = new BulkDeleteTasksUseCase(
   notificationService,
 );
 
-// Application UseCases — Reward
+// Application UseCases — Treat
 export const createTreatUseCase = new CreateTreatUseCase(treatRepository);
 export const updateTreatUseCase = new UpdateTreatUseCase(treatRepository);
 export const deleteTreatUseCase = new DeleteTreatUseCase(
   treatRepository,
   pointHistoryRepository,
 );
-export const getTreatsUseCase = new GetTreatsUseCase(treatRepository);
+export const getTreatsUseCase = new GetTreatsUseCase(
+  treatRepository,
+  pointHistoryRepository,
+);
 export const consumeTreatUseCase = new ConsumeTreatUseCase(
   treatRepository,
   pointHistoryRepository,

@@ -5,9 +5,9 @@ export type PointHistoryReason = "task_complete" | "treat_consumption";
 
 export interface PointHistoryProps {
   id: PointHistoryId;
-  /** タスク完了時に設定。ご褒美消費時は null */
+  /** タスク完了時に設定。ごほうび消費時は null */
   taskId: string | null;
-  /** ご褒美消費時に設定。タスク完了時は null。Treat 削除後は null になる場合がある */
+  /** ごほうび消費時に設定。タスク完了時は null。Treat 削除後は null になる場合がある */
   treatId: string | null;
   type: PointHistoryType;
   /** 符号付き: +加算 / -減算 */

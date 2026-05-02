@@ -1,7 +1,7 @@
-import { Treat } from "../../domain/reward/entities/Treat";
-import { ITreatRepository } from "../../domain/reward/repositories/ITreatRepository";
-import { CostPoints } from "../../domain/reward/valueObjects/CostPoints";
-import { TreatId } from "../../domain/reward/valueObjects/TreatId";
+import { Treat } from "../../domain/treat/entities/Treat";
+import { ITreatRepository } from "../../domain/treat/repositories/ITreatRepository";
+import { CostPoints } from "../../domain/treat/valueObjects/CostPoints";
+import { TreatId } from "../../domain/treat/valueObjects/TreatId";
 import { getDatabase } from "./schema";
 
 interface TreatRow {

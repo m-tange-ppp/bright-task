@@ -5,8 +5,8 @@ class DomainEventBus {
   private readonly handlers = new Map<string, Handler<any>[]>();
 
   subscribe<T>(eventType: string, handler: Handler<T>): void {
-    const existing = this.handlers.get(eventType) ?? [];
-    this.handlers.set(eventType, [...existing, handler]);
+    // 上書きにすることで Hot Reload 等での重複登録を防ぐ
+    this.handlers.set(eventType, [handler]);
   }
 
   async publish<T>(eventType: string, event: T): Promise<void> {

@@ -9,11 +9,15 @@ import "./global.css";
 import { notificationService } from "./src/di";
 import { initSchema } from "./src/infrastructure/db/schema";
 import AddTaskScreen from "./src/presentation/screens/AddTaskScreen";
+import AddTreatScreen from "./src/presentation/screens/AddTreatScreen";
 import EditTaskScreen from "./src/presentation/screens/EditTaskScreen";
+import EditTreatScreen from "./src/presentation/screens/EditTreatScreen";
 import HistoryScreen from "./src/presentation/screens/HistoryScreen";
 import HomeScreen from "./src/presentation/screens/HomeScreen";
 import SettingsScreen from "./src/presentation/screens/SettingsScreen";
 import TaskDetailScreen from "./src/presentation/screens/TaskDetailScreen";
+import TreatDetailScreen from "./src/presentation/screens/TreatDetailScreen";
+import TreatScreen from "./src/presentation/screens/TreatScreen";
 import { BottomTabParamList, RootStackParamList } from "./src/types/navigation";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -46,6 +50,16 @@ function MainTabs() {
           title: "達成記録",
           tabBarIcon: ({ color }) => (
             <Text style={{ color, fontSize: 18 }}>🏆</Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Treat"
+        component={TreatScreen}
+        options={{
+          title: "ごほうび",
+          tabBarIcon: ({ color }) => (
+            <Text style={{ color, fontSize: 18 }}>🎁</Text>
           ),
         }}
       />
@@ -115,6 +129,21 @@ export default function App() {
             name="TaskDetail"
             component={TaskDetailScreen}
             options={{ title: "タスク詳細" }}
+          />
+          <Stack.Screen
+            name="AddTreat"
+            component={AddTreatScreen}
+            options={{ title: "ごほうびを追加" }}
+          />
+          <Stack.Screen
+            name="EditTreat"
+            component={EditTreatScreen}
+            options={{ title: "ごほうびを編集" }}
+          />
+          <Stack.Screen
+            name="TreatDetail"
+            component={TreatDetailScreen}
+            options={{ title: "ごほうび詳細" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
