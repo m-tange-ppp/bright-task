@@ -103,7 +103,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <StatusBar style="auto" />
+        <StatusBar />
         <Stack.Navigator
           screenOptions={{
             headerTintColor: "#f97316",

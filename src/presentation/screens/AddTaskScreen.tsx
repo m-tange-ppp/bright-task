@@ -5,6 +5,7 @@ import { ja } from "date-fns/locale";
 import React, { useState } from "react";
 import {
   Alert,
+  Keyboard,
   ScrollView,
   Text,
   TextInput,
@@ -183,14 +184,20 @@ export default function AddTaskScreen() {
         <LevelSelector
           label="😣 だるさ（1: ちょっと億劫 〜 5: かなり憂鬱）"
           value={dislikeLevel}
-          onChange={setDislikeLevel}
+          onChange={(v) => {
+            Keyboard.dismiss();
+            setDislikeLevel(v);
+          }}
           color="blue"
         />
 
         <LevelSelector
           label="⭐ 重要度（1: 軽め 〜 5: 最重要）"
           value={importance}
-          onChange={setImportance}
+          onChange={(v) => {
+            Keyboard.dismiss();
+            setImportance(v);
+          }}
           color="red"
         />
 

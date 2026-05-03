@@ -91,7 +91,7 @@ export default function SettingsScreen() {
             <Text className="text-red-400">›</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             className="bg-red-50 border border-red-200 rounded-xl py-3 px-4 mb-3 flex-row items-center justify-between"
             onPress={() => confirmBulkDelete("completed")}
           >
@@ -107,7 +107,7 @@ export default function SettingsScreen() {
           >
             <Text className="text-red-700 font-bold">すべてのタスクを削除</Text>
             <Text className="text-red-500">›</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </SafeAreaView>

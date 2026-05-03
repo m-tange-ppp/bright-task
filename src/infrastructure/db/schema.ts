@@ -52,25 +52,25 @@ export async function initSchema(): Promise<void> {
   `);
 
   // 既存 DB へのマイグレーション（列が存在しない場合のみ追加）
-  const migrations: [string, string][] = [
-    [
-      "pre_reminder_offsets",
-      "ALTER TABLE tasks ADD COLUMN pre_reminder_offsets TEXT NOT NULL DEFAULT '[]'",
-    ],
-    [
-      "notification_ids",
-      "ALTER TABLE tasks ADD COLUMN notification_ids TEXT NOT NULL DEFAULT '[]'",
-    ],
-    [
-      "has_time",
-      "ALTER TABLE tasks ADD COLUMN has_time INTEGER NOT NULL DEFAULT 0",
-    ],
-  ];
-  for (const [, sql] of migrations) {
-    try {
-      await database.execAsync(sql);
-    } catch {
-      // 列がすでに存在する場合は無視
-    }
-  }
+  // const migrations: [string, string][] = [
+  //   [
+  //     "pre_reminder_offsets",
+  //     "ALTER TABLE tasks ADD COLUMN pre_reminder_offsets TEXT NOT NULL DEFAULT '[]'",
+  //   ],
+  //   [
+  //     "notification_ids",
+  //     "ALTER TABLE tasks ADD COLUMN notification_ids TEXT NOT NULL DEFAULT '[]'",
+  //   ],
+  //   [
+  //     "has_time",
+  //     "ALTER TABLE tasks ADD COLUMN has_time INTEGER NOT NULL DEFAULT 0",
+  //   ],
+  // ];
+  // for (const [, sql] of migrations) {
+  //   try {
+  //     await database.execAsync(sql);
+  //   } catch {
+  //     // 列がすでに存在する場合は無視
+  //   }
+  // }
 }
